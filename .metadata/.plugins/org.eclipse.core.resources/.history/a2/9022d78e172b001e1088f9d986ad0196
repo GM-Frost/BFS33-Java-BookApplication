@@ -1,0 +1,31 @@
+package com.takeo.bookstore.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.takeo.bookstore.models.User;
+import com.takeo.bookstore.repository.UserRepository;
+
+@Service
+public class UserService {
+    private final UserRepository userRepository;
+    
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+    
+    public User createUser(User request) {
+        // Check if the user already exists in the database
+        User existingUser = userRepository.findByUsername(request.getUsername());
+        if (existingUser != null) {
+            // User already exists, return an error message or throw an exception
+            throw new RuntimeException("User already exists");
+            // You can also return a custom response object instead of throwing an exception
+            // and handle it accordingly in your controller.
+        }
+        
+        // Save the user since it does not exist in the database
+        return userRepository.save(request);
+    }
+}
