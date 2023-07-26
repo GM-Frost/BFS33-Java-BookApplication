@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../../index.css";
 
+import { Link } from "react-router-dom";
+
 import axios from "axios";
 
 const Registration = () => {
@@ -30,25 +32,76 @@ const Registration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if any required fields are empty
+    const requiredFields = [
+      "email",
+      "userName",
+      "firstName",
+      "lastName",
+      "password",
+    ];
+    const emptyFields = requiredFields.filter(
+      (field) => !formData[field].trim()
+    );
+
+    if (emptyFields.length > 0) {
+      setMessage(
+        <span style={{ color: "red" }}>
+          Please fill in all the required fields.
+        </span>
+      );
+      return;
+    }
+
     try {
       const response = await axios.post(
-        "http://localhost:8080/create",
+        "http://localhost:8081/formsubmit",
         formData
       );
-      resetForm();
-      // Assuming the server returns a message upon successful registration
-      setMessage("User Successfully Registered");
+
+      if (response.status === 200) {
+        // Registration was successful
+        setMessage(
+          <span style={{ color: "green" }}>{response.data.message}</span>
+        );
+
+        // const fetchResponse = await fetch("http://localhost:8080/create", {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify(formData),
+        // });
+        // if (fetchResponse.ok) {
+        //   // Do something if the request was successful
+        // } else {
+        //   // Handle errors from the fetch request if needed
+        //   console.error("Fetch error:", fetchResponse.statusText);
+        // }
+
+        resetForm();
+      }
     } catch (error) {
-      // If an error occurs, handle it here (optional)
-      console.error("Error:", error.message);
-      setMessage("An error occurred during registration.");
+      if (error.response && error.response.status === 400) {
+        setMessage(
+          <span style={{ color: "red" }}>{error.response.data.message}</span>
+        );
+      } else {
+        console.error("Error:", error.message);
+        setMessage(
+          <span style={{ color: "red" }}>
+            An error occurred. Please try again later.
+          </span>
+        );
+      }
     }
   };
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setMessage("");
-    }, 5000); // Set the time in milliseconds (e.g., 5000 ms = 5 seconds)
+    }, 3000); // Set the time in milliseconds (e.g., 5000 ms = 5 seconds)
 
     // Clean up the timer when the component unmounts or when message changes
     return () => clearTimeout(timer);
@@ -57,8 +110,9 @@ const Registration = () => {
   return (
     <>
       <h1>User Registration</h1>
-      {message && <p>{message}</p>}
+
       <form className="form" onSubmit={handleSubmit}>
+        {message && <p>{message}</p>}
         <div className="form-body">
           <div className="username">
             <label className="form__label">Username</label>
@@ -120,6 +174,11 @@ const Registration = () => {
           <button type="submit" className="btn">
             Register
           </button>
+        </div>
+        <div className="loginhere">
+          <p>
+            Already Registered? <Link to="/login">Login Here</Link>
+          </p>
         </div>
       </form>
     </>

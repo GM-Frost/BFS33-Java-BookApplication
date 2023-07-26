@@ -44,15 +44,34 @@
 .form {
   background-color: white;
   border-radius: 5px;
-  width: 550px;
+  width: 450px;
   margin: 20px auto;
   padding: 20px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+
   /* height: 600px; */
 }
-
+.form input {
+  background-color: rgb(35, 55, 74);
+  border: 3px solid rgb(35, 55, 74);
+  border-radius: 10px;
+  padding-left: 10px;
+  box-sizing: border-box;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+}
+.form input:focus {
+  border: 3px solid rgb(204, 165, 128);
+}
 .form-body {
   text-align: left;
   padding: 20px 10px;
+  color: rgb(35, 55, 74);
+}
+.loginhere {
   color: #888;
 }
 
@@ -72,4 +91,12 @@
 
 .footer {
   text-align: center;
+}
+.footer button {
+  background-color: rgb(35, 55, 74);
+}
+.footer button:hover {
+  background-color: rgb(204, 165, 128);
+  color: rgb(35, 55, 74);
+  border-color: rgb(250, 214, 180);
 }
