@@ -16,11 +16,11 @@ import "./index.css";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/home",
     element: <Home />,
   },
   {
-    path: "/register",
+    path: "/",
     element: <Registration />,
   },
 

@@ -19,7 +19,6 @@ app.get("/", (req, res) => {
 app.post("/formsubmit", (req, res) => {
   const formData = req.body;
 
-  // Read existing data from data.json (if any)
   fs.readFile("data.json", "utf8", (err, data) => {
     if (err) {
       console.error("Error reading data.json:", err);
@@ -34,7 +33,6 @@ app.post("/formsubmit", (req, res) => {
       return res.status(500).json({ message: "Error parsing data.json" });
     }
 
-    // Check if the username already exists in the existingData array
     const usernameExists = existingData.some(
       (data) => data.userName === formData.userName
     );
@@ -43,7 +41,6 @@ app.post("/formsubmit", (req, res) => {
       return res.status(400).json({ message: "User already Exists" });
     }
 
-    // Add the new form data to the existing data array
     existingData.push(formData);
 
     // Write the updated data back to data.json
@@ -55,6 +52,38 @@ app.post("/formsubmit", (req, res) => {
 
       return res.json({ message: "User Registered Successfully" });
     });
+  });
+});
+
+// Endpoint to handle user login
+app.post("/login", (req, res) => {
+  const { userName, password } = req.body;
+
+  fs.readFile("data.json", "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading data.json:", err);
+      return res.status(500).json({ message: "Error reading data.json" });
+    }
+
+    let users = [];
+    try {
+      users = JSON.parse(data);
+    } catch (err) {
+      console.error("Error parsing data.json:", err);
+      return res.status(500).json({ message: "Error parsing data.json" });
+    }
+
+    // Check if the user with the given username and password exists
+    const user = users.find(
+      (userData) =>
+        userData.userName === userName && userData.password === password
+    );
+
+    if (user) {
+      return res.json({ message: "Login successful" });
+    } else {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
   });
 });
 
