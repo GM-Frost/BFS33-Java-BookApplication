@@ -56,35 +56,63 @@ app.post("/formsubmit", (req, res) => {
 });
 
 // Endpoint to handle user login
-app.post("/login", (req, res) => {
+// app.post("/login", (req, res) => {
+//   const { userName, password } = req.body;
+
+//   fs.readFile("data.json", "utf8", (err, data) => {
+//     if (err) {
+//       console.error("Error reading data.json:", err);
+//       return res.status(500).json({ message: "Error reading data.json" });
+//     }
+
+//     let users = [];
+//     try {
+//       users = JSON.parse(data);
+//     } catch (err) {
+//       console.error("Error parsing data.json:", err);
+//       return res.status(500).json({ message: "Error parsing data.json" });
+//     }
+
+//     // Check if the user with the given username and password exists
+//     const user = users.find(
+//       (userData) =>
+//         userData.userName === userName && userData.password === password
+//     );
+
+//     if (user) {
+//       return res.json({ message: "Login successful" });
+//     } else {
+//       return res.status(401).json({ message: "Invalid credentials" });
+//     }
+//   });
+// });
+
+// Endpoint to handle user login
+app.post("/login", async (req, res) => {
   const { userName, password } = req.body;
+  const response = await axios.get(`http://localhost:9090/showuser`);
+  let users = [];
+  try {
+    users = response.data;
+    console.log(users);
+  } catch (err) {
+    console.error("Error parsing data.json:", err);
 
-  fs.readFile("data.json", "utf8", (err, data) => {
-    if (err) {
-      console.error("Error reading data.json:", err);
-      return res.status(500).json({ message: "Error reading data.json" });
-    }
+    return res.status(500).json({ message: "Error parsing data.json" });
+  }
 
-    let users = [];
-    try {
-      users = JSON.parse(data);
-    } catch (err) {
-      console.error("Error parsing data.json:", err);
-      return res.status(500).json({ message: "Error parsing data.json" });
-    }
+  // Check if the user with the given username and password exists
 
-    // Check if the user with the given username and password exists
-    const user = users.find(
-      (userData) =>
-        userData.userName === userName && userData.password === password
-    );
+  const user = users.find(
+    (userData) =>
+      userData.userName === userName && userData.password === password
+  );
 
-    if (user) {
-      return res.json({ message: "Login successful" });
-    } else {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
-  });
+  if (user) {
+    return res.json({ message: "Login successful" });
+  } else {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
 });
 
 app.listen(PORT, () => {

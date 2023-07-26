@@ -56,7 +56,7 @@ const Registration = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8081/formsubmit",
+        "http://localhost:8081/formsubmit", //fake backend
         formData
       );
 
@@ -66,19 +66,21 @@ const Registration = () => {
           <span style={{ color: "green" }}>{response.data.message}</span>
         );
 
-        // const fetchResponse = await fetch("http://localhost:8080/create", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify(formData),
-        // });
-        // if (fetchResponse.ok) {
-        //   // Do something if the request was successful
-        // } else {
-        //   // Handle errors from the fetch request if needed
-        //   console.error("Fetch error:", fetchResponse.statusText);
-        // }
+        const fetchResponse = await fetch("http://localhost:9090/create", {
+          // spring backend
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (fetchResponse.ok) {
+          // Do something if the request was successful
+        } else {
+          // Handle errors from the fetch request if needed
+          console.error("Fetch error:", fetchResponse.statusText);
+        }
 
         resetForm();
       }

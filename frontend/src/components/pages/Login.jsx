@@ -26,6 +26,10 @@ const Login = () => {
         loginData
       );
 
+      const response2 = await axios.get(`http://localhost:9090/showuser`);
+      const list = response2.data;
+      console.log(list);
+
       // Assuming the server returns a message upon successful login
       setMessage(response.data.message);
 

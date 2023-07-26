@@ -30,8 +30,11 @@ public class UserController {
 	}
 	
 	@GetMapping("/showuser")
+	@CrossOrigin(origins="*",allowedHeaders= {"Content-Type"})
 	public List<User>showAllUser(){
+		System.out.println(userService.getAllUser());
 		return userService.getAllUser();
 	}
+	
 	
 }
