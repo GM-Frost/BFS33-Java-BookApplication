@@ -22,34 +22,37 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8081/login",
-        loginData
+        "http://localhost:9090/login",
+        loginData, // Send the loginData object as the request body
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
 
-      const response2 = await axios.get(`http://localhost:9090/showuser`);
-      const list = response2.data;
-      console.log(list);
-
-      // Assuming the server returns a message upon successful login
-      setMessage(response.data.message);
-
-      // If login is successful, navigate to the home page
       if (response.status === 200) {
-        navigate(`/home?username=${loginData.userName}`);
+        if (response.data === "Login successful!") {
+          // Login successful
+          setMessage(<span style={{ color: "green" }}>Login Success</span>);
+          navigate(`/home/${loginData.userName}`);
+        } else if (response.data === "Login failed") {
+          // Login failed
+          setMessage(
+            <span style={{ color: "red" }}>Incorrect Username or Password</span>
+          );
+        }
+      } else {
+        // Handle other status codes if needed
+        setMessage(
+          <span style={{ color: "red" }}>Login Failed. Please try again!</span>
+        );
       }
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        setMessage(
-          <span style={{ color: "red" }}>{error.response.data.message}</span>
-        );
-      } else {
-        console.error("Error:", error.message);
-        setMessage(
-          <span style={{ color: "red" }}>
-            An error occurred. Please try again later.
-          </span>
-        );
-      }
+      console.error(error);
+      setMessage(
+        <span style={{ color: "red" }}>Login Failed. Please try again!</span>
+      );
     }
   };
 

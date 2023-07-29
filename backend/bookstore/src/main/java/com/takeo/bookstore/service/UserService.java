@@ -26,6 +26,22 @@ public class UserService {
 		return userRepository.save(request);
 	}
 	
-	
+	 public boolean existsByUsername(String userName) {
 
+	        // For example, using JPA:
+	     return userRepository.existsByUserName(userName);
+
+	        // Replace the above line with your actual implementation for checking user existence.
+	    }
+	 
+	 public boolean validateUser(String username, String password) {
+		    User user = userRepository.findByUserName(username);
+
+		    if (user == null) {
+		      return false;
+		    }
+
+		    // Check if the provided password matches the user's stored password
+		    return user.getPassword().equals(password);
+		  }
 }

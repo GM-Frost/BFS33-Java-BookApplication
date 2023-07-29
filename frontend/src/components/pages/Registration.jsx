@@ -55,48 +55,41 @@ const Registration = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:8081/formsubmit", //fake backend
-        formData
+      //Checking If User already REGISTERED
+      const usernameResponse = await axios.get(
+        `http://localhost:9090/validateUser/${formData.userName}`
       );
 
-      if (response.status === 200) {
-        // Registration was successful
+      if (usernameResponse.data.exists) {
         setMessage(
-          <span style={{ color: "green" }}>{response.data.message}</span>
+          <span style={{ color: "red" }}>
+            User Already Exists. Please choose a different username.
+          </span>
         );
+        return;
+      }
 
-        const fetchResponse = await fetch("http://localhost:9090/create", {
-          // spring backend
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+      const fetchResponse = await fetch("http://localhost:9090/create", {
+        // spring backend
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-        if (fetchResponse.ok) {
-          // Do something if the request was successful
-        } else {
-          // Handle errors from the fetch request if needed
-          console.error("Fetch error:", fetchResponse.statusText);
-        }
-
+      if (fetchResponse.status === 200) {
+        setMessage(
+          <span style={{ color: "green" }}>Registration Success!</span>
+        );
         resetForm();
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        setMessage(
-          <span style={{ color: "red" }}>{error.response.data.message}</span>
-        );
-      } else {
-        console.error("Error:", error.message);
-        setMessage(
-          <span style={{ color: "red" }}>
-            An error occurred. Please try again later.
-          </span>
-        );
-      }
+      setMessage(
+        <span style={{ color: "red" }}>
+          Registration Failed. Please try again later.
+        </span>
+      );
     }
   };
 

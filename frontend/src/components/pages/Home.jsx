@@ -1,15 +1,14 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const Home = () => {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const username = queryParams.get("username");
+  const { username } = useParams();
 
   return (
     <>
-      <h1>Home</h1>
-      {username && <p>Welcome,{username}</p>}
+      <h1>Welcome </h1>
+      <span>{username}</span>
+      {/* Additional content for the Home page */}
     </>
   );
 };
