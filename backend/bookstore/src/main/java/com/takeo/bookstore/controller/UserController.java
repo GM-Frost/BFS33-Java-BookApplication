@@ -39,12 +39,6 @@ public class UserController {
 			e.printStackTrace();
 		}
 	}
-
-	@CrossOrigin(origins="http://localhost:5173/",allowedHeaders= {"Content-Type"})
-	@PostMapping("/delete")
-	public void DeleteUser(@RequestBody User userCreate) {
-		return "Deleted";
-	}
 	
 	@GetMapping("/showuser")
 	@CrossOrigin(origins="*",allowedHeaders= {"Content-Type"})
